@@ -1,0 +1,21 @@
+.card__like {
+    background-image: url(../../../images/heart.svg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: none;
+    height: 19px;
+    width: 22px;
+    align-self: center;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+    flex: none;
+}
+
+.card__like:hover {
+    opacity: 0.6;
+}
+
+.card__like:focus {
+    outline: none;
+  }
