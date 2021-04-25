@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const validator = require('validator');
 
 const {
   getCards,
@@ -14,7 +15,15 @@ router.get('/cards', getCards);
 router.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().uri(),
+    link: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value)) {
+        return value;
+      }
+      return helpers.message('Поле должно быть валидным url-адресом');
+    })
+      .messages({
+        'any.required': 'Поле "Ссылка" должно быть заполнено',
+      }),
   }),
 }), createCard);
 

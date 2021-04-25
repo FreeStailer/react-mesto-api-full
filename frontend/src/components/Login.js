@@ -28,7 +28,7 @@ function Login(props) {
             <form className="login__form" onSubmit={handleSubmit} name="sign-up" method="GET" noValidate>
                 <input className="login__input" id="email" name="email" type="text" placeholder="Email" 
                        minLength="2" maxLength="40" onChange={handleSetEmail} value={email} required />
-                <input className="login__input" id="password" name="password" type="text" placeholder="Пароль" 
+                <input className="login__input" id="password" name="password" type="password" placeholder="Пароль" 
                        minLength="2" maxLength="200" onChange={handleSetPassword} value={password} required />
                 <button className="login__submit" type="submit">Войти</button>
             </form>

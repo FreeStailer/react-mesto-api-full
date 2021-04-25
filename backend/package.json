@@ -8,15 +8,14 @@
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint .",
-    "fixLint": "npx eslint . --fix",
-    "prettier": "prettier --write src/**/*.js"
+    "fixLint": "npx eslint . --fix"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/FreeStailer/express-mesto.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Suslin Aleksey",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/FreeStailer/express-mesto/issues"
@@ -32,7 +31,6 @@
     "express-winston": "^4.1.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.2",
-    "prettier": "^2.2.1",
     "validator": "^13.5.2",
     "winston": "^3.3.3"
   },
@@ -40,7 +38,6 @@
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-react": "^7.23.1",
     "nodemon": "^2.0.7"
   }
 }

@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
-const { handleUserError } = require('../utils/errors');
 const NotFoundError = require('../utils/notfound-error.js');
 const ConflictError = require('../utils/conflict-error.js');
 const BadRequestError = require('../utils/badrequest-error.js');
+const UnauthorizedError = require('../utils/unauthorized-error.js');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -28,51 +28,95 @@ const createUser = (req, res, next) => {
     .then((user) => res.status(200).send({ mail: user.email }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Данные не прошли валидацию');
+        throw new BadRequestError('Некорректные данные');
       }
       if (err.name === 'MongoError' || err.code === '11000') {
-        throw new ConflictError('Такой email уже зарегистрирован');
+        throw new ConflictError('Конфликтная ошибка');
       }
     })
     .catch(next);
 };
 
-const getUserInfo = (req, res) => {
+const getUserInfo = (req, res, next) => {
   User.findById(req.user._id).orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
       res.send(user);
     })
-    .catch((err) => handleUserError(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new BadRequestError('Некорректные данные');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Конфликтная ошибка');
+      }
+    })
+    .catch(next);
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   User.findById(req.params.id).orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => {
       res.send(user);
     })
-    .catch((err) => handleUserError(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new BadRequestError('Некорректные данные');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Конфликтная ошибка');
+      }
+    })
+    .catch(next);
 };
 
-const getUsers = (req, res) => {
-  User.find({}).orFail()
+const getUsers = (req, res, next) => {
+  User.find({}).orFail(new NotFoundError('Пользователь не найден'))
     .then((users) => res.status(200).send(users))
-    .catch((err) => handleUserError(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new BadRequestError('Некорректные данные');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Конфликтная ошибка');
+      }
+    })
+    .catch(next);
 };
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   User.findByIdAndUpdate(req.user._id, {
     name: req.body.name,
     about: req.body.about,
-  }, { new: true, runValidators: true }).orFail()
+  }, { new: true, runValidators: true }).orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch((err) => handleUserError(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new BadRequestError('Некорректные данные');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Конфликтная ошибка');
+      }
+    })
+    .catch(next);
 };
 
-const updateUserAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar }, { new: true, runValidators: true })
-    .orFail()
+const updateUserAvatar = (req, res, next) => {
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar: req.body.avatar },
+    { new: true, runValidators: true },
+  )
+    .orFail(new NotFoundError('Пользователь не найден'))
     .then((user) => res.send({ data: user }))
-    .catch((err) => handleUserError(err, res));
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        throw new BadRequestError('Некорректные данные');
+      }
+      if (err.name === 'MongoError' || err.code === '11000') {
+        throw new ConflictError('Конфликтная ошибка');
+      }
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
@@ -88,7 +132,7 @@ const login = (req, res, next) => {
       return res.send({ token });
     })
     .catch(() => {
-      res.status(401).send({ message: 'Авторизация не пройдена' });
+      throw new UnauthorizedError('Авторизация не пройдена');
     })
     .catch(next);
 };
