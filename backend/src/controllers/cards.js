@@ -64,13 +64,13 @@ const likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-  .then((card) => {
-    if (!card) {
-      throw new NotFoundError('Карточка не найдена')
-    }
-    res.status(200).send(card);
-  })
-  .catch(next);
+    .then((card) => {
+      if (!card) {
+        throw new NotFoundError('Карточка не найдена');
+      }
+      res.status(200).send(card);
+    })
+    .catch(next);
 };
 
 const dislikeCard = (req, res, next) => {
@@ -81,7 +81,7 @@ const dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Карточка не найдена')
+        throw new NotFoundError('Карточка не найдена');
       }
       res.status(200).send(card);
     })

@@ -52,9 +52,9 @@ const getUser = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
-      throw new NotFoundError('Пользователь не найден');
-    }
-    return res.status(200).send(user);
+        throw new NotFoundError('Пользователь не найден');
+      }
+      return res.status(200).send(user);
     })
     .catch(next);
 };
@@ -98,11 +98,11 @@ const updateUserAvatar = (req, res, next) => {
   )
     .then((user) => {
       if (!user) {
-      throw new NotFoundError('Пользователь не найден');
-    }
-    return res.status(200).send({ data: user });
-  })
-  .catch(next);
+        throw new NotFoundError('Пользователь не найден');
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch(next);
 };
 
 const login = (req, res, next) => {
