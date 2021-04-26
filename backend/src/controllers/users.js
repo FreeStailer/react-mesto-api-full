@@ -38,39 +38,29 @@ const createUser = (req, res, next) => {
 };
 
 const getUserInfo = (req, res, next) => {
-  User.findById(req.user._id).orFail(new NotFoundError('Пользователь не найден'))
+  User.findById(req.user._id)
     .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Некорректные данные');
+      if (!user) {
+        throw new NotFoundError('Пользователь не найден');
       }
-      if (err.name === 'MongoError' || err.code === '11000') {
-        throw new ConflictError('Конфликтная ошибка');
-      }
+      return res.status(200).send(user);
     })
     .catch(next);
 };
 
 const getUser = (req, res, next) => {
-  User.findById(req.params.id).orFail(new NotFoundError('Пользователь не найден'))
+  User.findById(req.params.id)
     .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Некорректные данные');
-      }
-      if (err.name === 'MongoError' || err.code === '11000') {
-        throw new ConflictError('Конфликтная ошибка');
-      }
+      if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    return res.status(200).send(user);
     })
     .catch(next);
 };
 
 const getUsers = (req, res, next) => {
-  User.find({}).orFail(new NotFoundError('Пользователь не найден'))
+  User.find({})
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
@@ -106,17 +96,13 @@ const updateUserAvatar = (req, res, next) => {
     { avatar: req.body.avatar },
     { new: true, runValidators: true },
   )
-    .orFail(new NotFoundError('Пользователь не найден'))
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        throw new BadRequestError('Некорректные данные');
-      }
-      if (err.name === 'MongoError' || err.code === '11000') {
-        throw new ConflictError('Конфликтная ошибка');
-      }
-    })
-    .catch(next);
+    .then((user) => {
+      if (!user) {
+      throw new NotFoundError('Пользователь не найден');
+    }
+    return res.status(200).send({ data: user });
+  })
+  .catch(next);
 };
 
 const login = (req, res, next) => {

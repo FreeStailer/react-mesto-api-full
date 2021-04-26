@@ -29,8 +29,8 @@ router.patch('/users/me', celebrate({
 
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().custom((value, helpers) => {
-      if (validator.isURL(value)) {
+    avatar: Joi.string().required().custom((value, helpers) => {
+      if (validator.isURL(value, { require_protocol: true })) {
         return value;
       }
       return helpers.message('Поле должно быть валидным url-адресом');
